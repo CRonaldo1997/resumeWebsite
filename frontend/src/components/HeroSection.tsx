@@ -1,9 +1,9 @@
 "use client";
 
-import { useEffect, useRef, useCallback } from "react";
-import { motion } from "framer-motion";
+import { useEffect, useRef, useCallback, useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { useApp } from "@/lib/context";
-import { Mail, Phone, Cpu, Briefcase } from "lucide-react";
+import { Mail, Phone, Cpu, Briefcase, MessageCircle, X } from "lucide-react";
 
 /* ── Types ─────────────────────────────────────────────────── */
 type Particle = {
@@ -27,7 +27,8 @@ const SPEED = 0.32;
 
 /* ── Component ──────────────────────────────────────────────── */
 export default function HeroSection() {
-  const { t, isDark } = useApp();
+  const { lang, t, isDark } = useApp();
+  const [isQRVisible, setIsQRVisible] = useState(false);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const mouseRef = useRef({ x: -9999, y: -9999 });
   const ptsRef = useRef<Particle[]>([]);
@@ -211,7 +212,7 @@ export default function HeroSection() {
   const fadeUp = (delay: number) => ({
     initial: { opacity: 0, y: 18 },
     animate: { opacity: 1, y: 0 },
-    transition: { delay, duration: 0.7, ease: [0.22, 1, 0.36, 1] },
+    transition: { delay, duration: 0.7, ease: [0.22, 1, 0.36, 1] as any },
   });
 
   return (
@@ -363,6 +364,21 @@ export default function HeroSection() {
             <Mail size={13} style={{ color: "var(--accent)", flexShrink: 0 }} />
             jdong0610@163.com
           </a>
+          <span style={{ width: "1px", height: "14px", background: "var(--border)" }} />
+          <button
+            onClick={() => setIsQRVisible(true)}
+            style={{
+              display: "flex", alignItems: "center", gap: "6px",
+              fontSize: "0.82rem", color: "var(--text-3)",
+              background: "none", border: "none", padding: 0,
+              cursor: "pointer", transition: "color 0.2s",
+            }}
+            onMouseEnter={e => (e.currentTarget.style.color = "var(--accent)")}
+            onMouseLeave={e => (e.currentTarget.style.color = "var(--text-3)")}
+          >
+            <MessageCircle size={13} style={{ color: "var(--accent)", flexShrink: 0 }} />
+            {lang === "zh" ? "微信" : "WeChat"}
+          </button>
         </motion.div>
 
         {/* Title badge */}
@@ -403,17 +419,19 @@ export default function HeroSection() {
         <motion.div
           {...fadeUp(0.36)}
           style={{
-            textAlign: "center",
+            textAlign: "left",
             marginBottom: "32px",
             width: "100%",
           }}
         >
-          <p style={{ fontSize: "0.95rem", lineHeight: 1.8, color: "var(--text-2)", marginBottom: "6px" }}>
+          <p style={{ fontSize: "0.95rem", lineHeight: 1.8, color: "var(--text-2)", marginBottom: "6px", textIndent: "2em" }}>
             {t.hero.profile}
           </p>
-          <p style={{ fontSize: "0.88rem", lineHeight: 1.75, color: "var(--text-3)" }}>
-            {t.hero.subProfile}
-          </p>
+          {t.hero.subProfile && (
+            <p style={{ fontSize: "0.88rem", lineHeight: 1.75, color: "var(--text-3)", textIndent: "2em" }}>
+              {t.hero.subProfile}
+            </p>
+          )}
         </motion.div>
 
         {/* Stats strip */}
@@ -485,6 +503,62 @@ export default function HeroSection() {
           <path d="M12 5v14M5 12l7 7 7-7" />
         </svg>
       </motion.div>
+
+      {/* QR Code Modal */}
+      <AnimatePresence>
+        {isQRVisible && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={() => setIsQRVisible(false)}
+            style={{
+              position: "fixed", inset: 0, zIndex: 200,
+              display: "flex", alignItems: "center", justifyContent: "center",
+              background: "rgba(0,0,0,0.4)", backdropFilter: "blur(12px)",
+              padding: "24px", cursor: "zoom-out",
+            }}
+          >
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0, y: 20 }}
+              animate={{ scale: 1, opacity: 1, y: 0 }}
+              exit={{ scale: 0.9, opacity: 0, y: 20 }}
+              onClick={(e) => e.stopPropagation()}
+              className="glass"
+              style={{
+                position: "relative",
+                padding: "24px",
+                borderRadius: "24px",
+                maxWidth: "320px",
+                width: "100%",
+                cursor: "default",
+                textAlign: "center",
+              }}
+            >
+              <button
+                onClick={() => setIsQRVisible(false)}
+                style={{
+                  position: "absolute", top: "12px", right: "12px",
+                  background: "none", border: "none", color: "var(--text-3)",
+                  cursor: "pointer", padding: "4px",
+                }}
+              >
+                <X size={20} />
+              </button>
+              <h3 style={{ fontSize: "1rem", fontWeight: 600, color: "var(--text-1)", marginBottom: "16px" }}>
+                {lang === "zh" ? "扫码添加微信" : "Scan to connect on WeChat"}
+              </h3>
+              <div style={{ background: "#fff", padding: "12px", borderRadius: "12px" }}>
+                <img
+                  src="/QRCode.png"
+                  alt="WeChat QR Code"
+                  style={{ width: "100%", height: "auto", display: "block" }}
+                />
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </section>
   );
 }

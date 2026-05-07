@@ -4,6 +4,7 @@ import { useApp } from "@/lib/context";
 import { motion, AnimatePresence } from "framer-motion";
 import { Sun, Moon, Languages, FileText } from "lucide-react";
 import { useState, useEffect } from "react";
+import DownloadPdfButton from "./DownloadPdfButton";
 
 const NAV_LINKS = (t: ReturnType<typeof useApp>["t"]) => [
   { href: "#competencies", label: t.nav.competencies },
@@ -136,27 +137,8 @@ export default function Navbar() {
               )}
             </AnimatePresence>
           </button>
-
-          {/* Download */}
-          <a
-            href="#"
-            onClick={(e) => { e.preventDefault(); alert(lang === "zh" ? "简历下载功能即将上线…" : "PDF download coming soon…"); }}
-            style={{
-              display: "flex", alignItems: "center", gap: "6px",
-              padding: "6px 14px", borderRadius: "999px",
-              fontSize: "0.78rem", fontWeight: 600,
-              background: "var(--accent)",
-              color: "oklch(1 0 0)",
-              textDecoration: "none",
-              boxShadow: "0 0 18px var(--accent-glow)",
-              transition: "opacity 0.2s",
-            }}
-            onMouseEnter={(e) => (e.currentTarget.style.opacity = "0.88")}
-            onMouseLeave={(e) => (e.currentTarget.style.opacity = "1")}
-          >
-            <FileText size={13} />
-            {t.nav.download}
-          </a>
+          
+          <DownloadPdfButton />
         </div>
       </div>
     </motion.nav>

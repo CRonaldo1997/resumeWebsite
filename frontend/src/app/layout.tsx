@@ -14,9 +14,23 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "蒋栋 | 资深AI技术专家 & Jiang Dong | Senior AI Expert",
-  description:
-    "蒋栋个人简历网站 — 资深AI技术专家与金融科技领军者，15年IT行业背景，深耕大模型与计算机视觉双赛道。",
+  title: "蒋栋 (Jiang Dong) | 资深AI技术专家 & 金融科技领军者",
+  description: "蒋栋个人简历网站 — 15年IT背景，深耕大模型(LLM)与计算机视觉(CV)，致力于AI技术创新与金融科技转型。",
+  keywords: ["蒋栋", "Jiang Dong", "AI专家", "大模型", "LLM", "计算机视觉", "CV", "金融科技", "个人简历"],
+  authors: [{ name: "蒋栋" }],
+  openGraph: {
+    title: "蒋栋 (Jiang Dong) | 资深AI技术专家",
+    description: "蒋栋个人简历网站 — 资深AI技术专家与金融科技领军者，深耕大模型与计算机视觉双赛道。",
+    url: "https://your-domain.com", // User should update this
+    siteName: "蒋栋个人简历",
+    locale: "zh_CN",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "蒋栋 (Jiang Dong) | 资深AI技术专家",
+    description: "蒋栋个人简历网站 — 资深AI技术专家与金融科技领军者。",
+  },
 };
 
 export default function RootLayout({

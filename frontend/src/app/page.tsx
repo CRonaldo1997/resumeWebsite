@@ -7,21 +7,12 @@ import AIChatbot from "@/components/AIChatbot";
 
 export default function Home() {
   return (
-    <main style={{ minHeight: "100vh", background: "var(--bg-base)", color: "var(--text-1)" }}>
+    <main className="min-h-screen bg-[var(--bg-base)] text-[var(--text-1)]">
       <Navbar />
       <HeroSection />
 
       {/* ── Main content wrapper ─────────────────────────────── */}
-      <div
-        style={{
-          maxWidth: "1040px",
-          margin: "0 auto",
-          padding: "80px 32px 160px",
-          display: "flex",
-          flexDirection: "column",
-          gap: "120px",
-        }}
-      >
+      <div className="max-w-[1040px] mx-auto px-8 pt-20 pb-40 flex flex-col gap-[120px]">
         <CoreCompetencies />
         <ExperienceTimeline />
         <EducationPatents />
