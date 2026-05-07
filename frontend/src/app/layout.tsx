@@ -21,7 +21,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "蒋栋 (Jiang Dong) | 资深AI技术专家",
     description: "蒋栋个人简历网站 — 资深AI技术专家与金融科技领军者，深耕大模型与计算机视觉双赛道。",
-    url: "https://your-domain.com", // User should update this
+    url: "https://jdaistudio.top", // 已更新为您的真实域名
     siteName: "蒋栋个人简历",
     locale: "zh_CN",
     type: "website",
