@@ -3,42 +3,49 @@ import OpenAI from "openai";
 import fs from "fs";
 import path from "path";
 
-const client = new OpenAI({
-  apiKey: process.env.MODEL_SCOPE_API_KEY || "",
-  baseURL: "https://api-inference.modelscope.cn/v1",
-  timeout: 60000, // 增加到 60 秒
-});
-
 // 适配 Vercel 生产环境的长耗时设置 (Hobby 版上限 10s, Pro 版支持 300s)
 export const maxDuration = 60;
+
+// 内存缓存简历内容，避免每轮对话都进行磁盘 IO
+let cachedResume: string | null = null;
 
 export async function POST(req: NextRequest) {
   try {
     const { messages } = await req.json();
 
-    if (!process.env.MODEL_SCOPE_API_KEY) {
+    const apiKey = process.env.MODEL_SCOPE_API_KEY;
+    if (!apiKey) {
       console.error("Missing MODEL_SCOPE_API_KEY in environment variables.");
       return new Response(
-        JSON.stringify({ error: "API key not configured. Please add MODEL_SCOPE_API_KEY to your .env.local file." }),
+        JSON.stringify({ error: "API key not configured. Please check your .env.local file." }),
         { status: 401, headers: { "Content-Type": "application/json" } }
       );
     }
 
-    // Read resume markdown from local data folder
-    const resumePath = path.join(process.cwd(), "src", "data", "resume.md");
-    let resumeContent = "";
-    try {
-      resumeContent = fs.readFileSync(resumePath, "utf8");
-    } catch (e) {
-      console.warn("Could not read resume from src/data/resume.md");
-      resumeContent = "简历内容暂时无法读取。";
+    const client = new OpenAI({
+      apiKey: apiKey,
+      baseURL: "https://api-inference.modelscope.cn/v1",
+      timeout: 60000,
+    });
+
+    // 读取简历内容（优先从缓存读取）
+    if (!cachedResume) {
+      const resumePath = path.join(process.cwd(), "src", "data", "resume.md");
+      try {
+        cachedResume = fs.readFileSync(resumePath, "utf8");
+      } catch (e) {
+        console.warn("Could not read resume from src/data/resume.md");
+        cachedResume = "简历内容暂时无法读取。";
+      }
     }
 
+    // 性能优化逻辑：仅在第一轮对话（messages 长度 <= 2）时注入完整简历。
+    // 后续对话通过已有的对话历史 (history) 来保持上下文参考，减少每轮发送的 token 数量，提升响应速度。
+    const isFirstTurn = !messages || messages.length <= 2;
+    
     const systemPrompt = `你现在是蒋栋的"数字分身"（Digital Twin）。你的任务是直接以蒋栋本人的身份（第一人称"我"）回答用户关于简历、职业背景、技术积累和核心能力的问题。
 
-以下是我的（蒋栋）详细简历内容（Markdown格式）：
-
-${resumeContent}
+${isFirstTurn ? `以下是我的（蒋栋）详细简历内容（Markdown格式）：\n\n${cachedResume}` : "（简历详细信息已在对话初期提供，请根据之前的对话记录进行后续回答）"}
 
 请遵循以下交互准则：
 1. **第一人称回答**：始终使用"我"来指代自己（例如："我在中再寿险负责..."，"我的核心能力包括..."）。
@@ -48,7 +55,7 @@ ${resumeContent}
 5. **简洁有力**：回答要重点突出，避免冗长，尽量保持自然的对话感。不要表现得像个机器人。`;
 
     const response: any = await client.chat.completions.create({
-      model: "Qwen/Qwen3.5-27B",
+      model: "Qwen/Qwen3.5-122B-A10B",
       messages: [
         { role: "system", content: systemPrompt },
         ...messages,

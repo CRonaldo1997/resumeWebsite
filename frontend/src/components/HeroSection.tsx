@@ -338,7 +338,7 @@ export default function HeroSection() {
           }}
         >
           <a
-            href="tel:18025395485"
+            href={`tel:${t.hero.phone}`}
             style={{
               display: "flex", alignItems: "center", gap: "6px",
               fontSize: "0.82rem", color: "var(--text-3)",
@@ -348,11 +348,11 @@ export default function HeroSection() {
             onMouseLeave={e => (e.currentTarget.style.color = "var(--text-3)")}
           >
             <Phone size={13} style={{ color: "var(--accent)", flexShrink: 0 }} />
-            18025395485
+            {t.hero.phone}
           </a>
           <span style={{ width: "1px", height: "14px", background: "var(--border)" }} />
           <a
-            href="mailto:jdong0610@163.com"
+            href={`mailto:${t.hero.email}`}
             style={{
               display: "flex", alignItems: "center", gap: "6px",
               fontSize: "0.82rem", color: "var(--text-3)",
@@ -362,7 +362,7 @@ export default function HeroSection() {
             onMouseLeave={e => (e.currentTarget.style.color = "var(--text-3)")}
           >
             <Mail size={13} style={{ color: "var(--accent)", flexShrink: 0 }} />
-            jdong0610@163.com
+            {t.hero.email}
           </a>
           <span style={{ width: "1px", height: "14px", background: "var(--border)" }} />
           <button

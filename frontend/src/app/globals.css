@@ -187,6 +187,29 @@ body {
   animation: shimmer 8s linear infinite;
 }
 
+/* ─── Markdown Content (Chatbot) ─────────────────────────── */
+.markdown-content a {
+  color: var(--accent);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  transition: opacity 0.2s ease;
+}
+.markdown-content a:hover {
+  opacity: 0.8;
+}
+.markdown-content ul, .markdown-content ol {
+  padding-left: 1.25rem;
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+.markdown-content li {
+  margin-bottom: 0.25rem;
+}
+.markdown-content strong {
+  color: var(--text-1);
+  font-weight: 600;
+}
+
 /* ─── Reduced motion ─────────────────────────────────────── */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {

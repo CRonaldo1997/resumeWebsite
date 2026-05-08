@@ -72,7 +72,7 @@ export default function AIChatbot() {
       const isTimeout = error.message?.includes("timeout") || error.message?.includes("timed out");
       const errorMsg = isTimeout 
         ? "抱歉，我的大脑（AI模型）响应稍微慢了一点，请您再次尝试提问。" 
-        : "抱歉，我现在无法回答。请稍后再试。";
+        : (error.message || "抱歉，我现在无法回答。请稍后再试。");
       setMessages((prev) => [...prev, { role: "assistant", content: errorMsg }]);
     } finally {
       setIsLoading(false);
