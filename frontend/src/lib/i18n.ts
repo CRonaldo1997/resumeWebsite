@@ -8,6 +8,8 @@ export const content = {
       education: '教育背景',
       patents: '专利成果',
       download: '下载简历',
+      downloadZh: '中文版 (PDF)',
+      downloadEn: 'English (PDF)',
     },
     hero: {
       name: '蒋 栋',
@@ -227,6 +229,8 @@ export const content = {
       education: 'Education',
       patents: 'Patents',
       download: 'Download CV',
+      downloadZh: 'Chinese Ver.',
+      downloadEn: 'English Ver.',
     },
     hero: {
       name: 'Jiang Dong',
